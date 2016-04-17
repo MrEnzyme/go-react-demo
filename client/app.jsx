@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import io from 'socket.io-client';
 
 var socket = io();
 $('form').submit(function(){
@@ -32,9 +33,9 @@ class ChatWindow extends React.Component {
     this.state = {messages: []};
   }
   componentDidMount() {
-    socket.on('chat message', this.addMessage.bind(this));
+    socket.on('chat message', this.messageReceived.bind(this));
   }
-  addMessage(text) {
+  messageReceived(text) {
     let {messages} = this.state;
     messages.push(text);
     if(messages.length > 3) {
