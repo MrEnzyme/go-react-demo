@@ -7,5 +7,6 @@ npm install
 npm install -g webpack
 webpack
 cd ..
+go get
 go run main.go
 ```
