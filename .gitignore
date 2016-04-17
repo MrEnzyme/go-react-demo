@@ -1,0 +1,5 @@
+.idea/
+client/bundle.js
+client/node_modules
+*.exe
+*.exe~
