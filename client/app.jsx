@@ -3,11 +3,6 @@ import ReactDOM from 'react-dom';
 import io from 'socket.io-client';
 
 var socket = io();
-$('form').submit(function(){
-  socket.emit('chat message', $('#m').val());
-  $('#m').val('');
-  return false;
-});
 
 class MessageList extends React.Component {
   render() {
@@ -24,6 +19,37 @@ class MessageList extends React.Component {
 class Message extends React.Component {
   render() {
     return <li>{this.props.text}</li>;
+  }
+}
+
+class ChatBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {message: ''};
+  }
+
+  onKey(e) {
+    this.setState({message: e.target.value});
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    let {message} = this.state;
+    socket.emit('chat message', message);
+    this.setState({message: ''});
+  }
+
+  render() {
+    return(
+      <div id='chat_box'>
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <input
+            onChange={this.onKey.bind(this)}
+            value={this.state.message}
+          />
+        </form>
+      </div>
+    )
   }
 }
 
@@ -45,14 +71,17 @@ class ChatWindow extends React.Component {
   }
   render() {
     return (
-      <ul>
-        <MessageList messages={this.state.messages}/>
-      </ul>
+      <div id='game'>
+        <ul>
+          <MessageList messages={this.state.messages}/>
+        </ul>
+        <ChatBox/>
+      </div>
     )
   }
 }
 
 ReactDOM.render(
   <ChatWindow/>,
-  document.getElementById('game')
+  document.getElementById('game-frame')
 );
